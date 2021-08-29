@@ -67,6 +67,14 @@ start_poll_menu = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=Tr
     ]
 ])
 
+# ==== Re_send menu ==== #
+re_send_poll = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True, keyboard=[
+    [
+        KeyboardButton(text=BUTTONS['re_send_poll']),
+        KeyboardButton(text=BUTTONS['btn_back']),
+    ]
+])
+
 # ==== POLL:COLOR ==== #
 poll_color_menu = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True, keyboard=[
     [

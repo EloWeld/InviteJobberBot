@@ -36,7 +36,7 @@ async def btc_payment2(message: types.Message, state: FSMContext):
         await finish_poll(message.from_user.id, state=None, deposit=price)
         await message.answer(
             text=f"Ваш перевод должен быть проверен вручную администратором бота. \n"
-                 f"Ожидайте уведомления 👇\n{BTC_BANKER_WALLET}",
+                 f"Ожидайте уведомления",
             reply_markup=nav.get_user_menu(message.from_user.id))
         await state.finish()
 

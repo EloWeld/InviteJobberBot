@@ -7,7 +7,7 @@ import nav
 from filters import *
 from loader import dp, bot
 from nav import get_user_menu
-from src.data.config import BUTTONS, DECODE_POLL, PROFILE_GIF_FILEID, DATETIME_FORMAT, MESSAGES
+from src.data.config import BUTTONS, DECODE_POLL, PROFILE_GIF_FILEID, DATETIME_FORMAT, MESSAGES, PollStatus
 from src.data.database import UsersDB, PollDB
 
 # region START
@@ -43,11 +43,14 @@ async def cmd_find_employees(message: Message):
     # Проверяем, есть ли уже зарегестрированная анкета
     try:
         user_poll = PollDB.polls_filter('owner_id', message.from_user.id)[0]
-        status = DECODE_POLL['status'][user_poll['status']]
+        d_status = DECODE_POLL['status'][user_poll['status']]
         await message.answer(f'У вас уже есть анкета со статусом '
-                             f'<b><u>{status}</u></b>!\n'
+                             f'<b><u>{d_status}</u></b>!\n'
                              f'Посмотреть её можно в профиле',
                              reply_markup=get_user_menu(message))
+        if user_poll['status'] in [str(PollStatus.INACTIVE), str(PollStatus.EDITING)]:
+            await message.answer(f'Ваша анкета имеет статус <b>{d_status}</b>. Вы можете перезаполнить анкету',
+                                 reply_markup=nav.re_send_poll)
     except:
 
         await message.answer(MESSAGES["poll_moto"], reply_markup=nav.start_poll_menu)

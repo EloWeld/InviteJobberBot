@@ -19,16 +19,28 @@ async def change_poll_status(poll_id, status: PollStatus, state: FSMContext = No
 
 
 # ======================= HANDLERS ======================= #
+@dp.message_handler(IsPrivate(), Text(BUTTONS["re_send_poll"]))
+async def cmd_poll_resend(message: Message):
+    msg = await message.answer(MESSAGES['poll_color_lbl'], reply_markup=nav.poll_color_menu)
+
+    await EmployeesPoll.Color.set()
+    state = dp.get_current().current_state()
+    await state.update_data(poll_msgs=[[EmployeesPoll.Color, msg]])
+
+
 @dp.message_handler(IsPrivate(), Text('☕️Приступить'))
 async def cmd_poll_start(message: Message):
     # Проверяем, есть ли уже зарегестрированная анкета
     try:
         user_poll = PollDB.polls_filter('owner_id', message.from_user.id)[0]
-        status = DECODE_POLL['status'][user_poll['status']]
+        d_status = DECODE_POLL['status'][user_poll['status']]
         await message.answer(f'У вас уже есть анкета со статусом '
-                             f'<b><u>{status}</u></b>!\n'
+                             f'<b><u>{d_status}</u></b>!\n'
                              f'Посмотреть её можно в профиле',
                              reply_markup=get_user_menu(message))
+        if user_poll['status'] in [str(PollStatus.INACTIVE), str(PollStatus.EDITING)]:
+            await message.answer(f'Ваша анкета имеет статус <b>{d_status}</b>. Вы можете перезаполнить анкету',
+                                 reply_markup=nav.re_send_poll)
     except:
         msg = await message.answer(MESSAGES['poll_color_lbl'], reply_markup=nav.poll_color_menu)
 
@@ -260,9 +272,10 @@ async def cmd_poll_confirm(message: Message, state: FSMContext):
     mult = PRICE_COLOR_MULTIPLY[poll_data["color"]]
 
     await message.answer('<b>Выберите период действия подписки:</b>\n'
-                         f'• На 3 дня — <u>{PRICELIST[sub_type][3] * mult}</u>₽\n'
-                         f'• На неделю — <u>{PRICELIST[sub_type][7] * mult}</u>₽\n'
-                         f'• На месяц — <u>{PRICELIST[sub_type][30] * mult}</u>₽\n', reply_markup=nav.poll_subs_length)
+                         f'• На 3 дня — <u>{int(PRICELIST[sub_type][3] * mult)}</u>₽\n'
+                         f'• На неделю — <u>{int(PRICELIST[sub_type][7] * mult)}</u>₽\n'
+                         f'• На месяц — <u>{int(PRICELIST[sub_type][30] * mult)}</u>₽\n',
+                         reply_markup=nav.poll_subs_length)
     await EmployeesPoll.SubscriptionLength.set()
 
 
@@ -316,7 +329,7 @@ async def cmd_posting_time(message: Message, state: FSMContext):
 
 async def finish_poll(owner_id, state=None, deposit: int = 0):
     # Обновляем записи в бд
-    user_deposit = int(UsersDB.get_0user_data(owner_id, 'deposit'))
+    user_deposit = int(float(UsersDB.get_0user_data(owner_id, 'deposit')))
     UsersDB.update_field(owner_id, 'deposit', user_deposit + int(deposit))
 
     poll_data = PollDB.polls_filter('owner_id', owner_id)[0]

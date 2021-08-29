@@ -30,13 +30,17 @@ async def cmd_admin_stats(message: Message):
 @dp.message_handler(IsAdmin(), Text(BUTTONS["admin_btc_banker"]))
 @dp.message_handler(IsAdmin(), Command('/banker'))
 async def cmd_btc_banker(message: Message):
-    await message.answer('Список платежей по банкиру:')
-
     checks = CheckDB.all_checks()
+    if len(checks) > 0:
+        await message.answer('Список платежей по банкиру:')
+    else:
+        await message.answer('❌ Платежей по банкиру нет ❌')
+
+
     for check in checks:
-        username = UsersDB.get_0user_data(check["id"], 'username')
-        await message.answer(text=f'@{username} хочет оплатить подписку банкиром.\n'
-                                  f'{check["check"]}\n', reply_markup=nav.get_banker(check))
+        username = UsersDB.filter('id', check["owner_id"])[0]["username"]
+        await message.answer(text=f'@{username} хочет оплатить подписку банкиром. Чек в сообщении ниже ⬇\n')
+        await message.answer(text=f'{check["check"]}\n', reply_markup=nav.get_banker(check))
 
 
 # =============== ADD ADMIN ============= #

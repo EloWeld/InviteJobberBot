@@ -189,6 +189,7 @@ MESSAGES = {
 
 BUTTONS = {
     'start': '⭐ Начать ⭐',
+    're_send_poll': 'Перехаполнить анкету',
     'poll_get_ready': '☕️Приступить',
     'next': '✅ Всё ОК, едем дальше ✅',
     'pcolor_white': '▫️Белая▫️',

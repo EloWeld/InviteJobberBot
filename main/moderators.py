@@ -73,10 +73,13 @@ async def callback_answer(callback: CallbackQuery, state: FSMContext):
         print(action, callback.data, check, poll_id)
         if 'approve' == action:
             # Изменяем статус анкеты
-            await finish_poll(owner_id=user_id, deposit=deposit, state=None)
-            await bot.send_message(chat_id=user_id, text=f'Ваша оплата чека {check} была подтверждена!\n'
-                                                         'Сейчас анкета уйдёт на модерацию, \n'
-                                                         'вы всегда можете посмотреть статус заявки в Профиле /profile')
+            try:
+                await finish_poll(owner_id=user_id, deposit=deposit, state=None)
+                await bot.send_message(chat_id=user_id, text=f'Ваша оплата чека {check} была подтверждена!\n'
+                                                             'Сейчас анкета уйдёт на модерацию, \n'
+                                                             'вы всегда можете посмотреть статус заявки в Профиле /profile')
+            except:
+                await callback.message.answer(f'У юзера {user_id} произошла ошибка‼')
         if 'cancel' == action:
             try:
                 PollDB.polls_filter_remove('poll_id', poll_id)
