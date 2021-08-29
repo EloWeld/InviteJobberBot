@@ -26,29 +26,6 @@ async def cmd_admin_stats(message: Message):
                          format(users_count, users_total_deposit, active_polls, mod_polls))
 
 
-@dp.callback_query_handler(IsAdmin())
-async def banker_callback(cb: CallbackQuery):
-    if 'admin:banker:' in cb.data:
-        action = cb.data.split(':')[2]
-        check = cb.data.split(':')[3]
-        poll_id = cb.data.split(':')[4]
-        user_id = cb.data.split(':')[5]
-        deposit = cb.data.split(':')[6]
-        poll = PollDB.polls_filter('id', poll_id)[0]
-        if 'approve' == action:
-            # Изменяем статус анкеты
-            finish_poll(owner_id=user_id, deposit=deposit, state=None)
-            await bot.send_message(chat_id=user_id, text=f'Ваша оплата чека {check} была подтверждена!\n'
-                                                         'Сейчас анкета уйдёт на модерацию, \n'
-                                                         'вы всегда можете посмотреть статус заявки в Профиле /profile')
-        if 'cancel' == action:
-            PollDB.polls_filter_remove('poll_id', poll_id)
-            await bot.send_message(chat_id=user_id, text=f'Ваша оплата чека {check} была отклонена!\n'
-                                                         'Заполните анкету заново, т.к. она аннулированна!\n'
-                                                         '/find_employs')
-        await cb.message.delete()
-
-
 # =============== Banker Menu ============= #
 @dp.message_handler(IsAdmin(), Text(BUTTONS["admin_btc_banker"]))
 @dp.message_handler(IsAdmin(), Command('/banker'))

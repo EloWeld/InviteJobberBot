@@ -110,9 +110,9 @@ class CheckDatabase(Database):
         super().__init__()
         pass
 
-    def add_check(self, poll_id, owner_id, check, price):
-        sql = 'INSERT INTO btc_checks(poll_id, owner_id, check, price) VALUES(?, ?, ?, ?)'
-        params = (poll_id, owner_id, check, price)
+    def add_check(self, poll_id, owner_id, check_id, price):
+        sql = 'INSERT INTO btc_checks(poll_id, owner_id, check_id, price) VALUES(?, ?, ?, ?)'
+        params = (str(poll_id), str(owner_id), str(check_id), str(price))
         self.execute(sql, parameters=params, commit=True)
 
     def get_check(self, select_colmun, key, value):
@@ -142,8 +142,8 @@ class CheckDatabase(Database):
 
         return db_out
 
-    def remove_check(self, key, value):
-        sql = f'DELETE FROM btc_checks WHERE {key} = "{str(value)}"'
+    def remove_check(self, check):
+        sql = f'DELETE FROM btc_checks WHERE check_id = "{check}"'
         self.execute(sql, commit=True)
 
 

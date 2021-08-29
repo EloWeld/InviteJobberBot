@@ -21,10 +21,8 @@ from glQiwiApi.types import Bill
 
 import nav
 from loader import dp, bot
-import qrcode
 
 
-# ======================= CALLBACKS ======================= #
 @dp.message_handler(state='btc_payment')
 async def btc_payment2(message: types.Message, state: FSMContext):
     if not (str.isascii(message.text)):
@@ -33,15 +31,17 @@ async def btc_payment2(message: types.Message, state: FSMContext):
         await state.update_data(check=message.text)
         price = (await state.get_data())["price"]
         poll_id = PollDB.polls_filter('owner_id', message.from_user.id)[0]["id"]
-        CheckDB.add_check(poll_id, message.from_user.id, message.text, price)
+        print(poll_id, message.from_user.id, str(message.text), int(price))
+        CheckDB.add_check(poll_id, message.from_user.id, str(message.text), price)
         await finish_poll(message.from_user.id, state=None, deposit=price)
         await message.answer(
-                                   text=f"Ваш перевод должен быть проверен вручную администратором бота. \n"
-                                        f"Ожидайте уведомления 👇\n{BTC_BANKER_WALLET}",
-                                   reply_markup=nav.get_user_menu(message.from_user.id))
+            text=f"Ваш перевод должен быть проверен вручную администратором бота. \n"
+                 f"Ожидайте уведомления 👇\n{BTC_BANKER_WALLET}",
+            reply_markup=nav.get_user_menu(message.from_user.id))
         await state.finish()
 
 
+# ======================= CALLBACKS ======================= #
 @dp.callback_query_handler(state='qiwi_payment')
 async def callback_answer(callback: CallbackQuery, state: FSMContext):
     if 'poll:payment:qiwi' in callback.data:

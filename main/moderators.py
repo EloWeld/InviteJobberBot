@@ -9,8 +9,9 @@ from yoomoney import Quickpay
 import nav
 from filters import *
 from loader import dp, bot
+from main import finish_poll
 from main.poll_controller import *
-from src import PollDB
+from src import PollDB, CheckDB
 from src.data.config import BUTTONS, YOOMONEY, QIWI_WALLET
 from states.states import *
 
@@ -63,16 +64,40 @@ f'''
 @dp.callback_query_handler()
 async def callback_answer(callback: CallbackQuery, state: FSMContext):
     sdata = callback.data.split(':')
+    if 'admin:banker' in callback.data:
+        action = sdata[2]
+        check = sdata[3]
+        poll_id = sdata[4]
+        user_id = sdata[5]
+        deposit = sdata[6]
+        print(action, callback.data, check, poll_id)
+        if 'approve' == action:
+            # Изменяем статус анкеты
+            await finish_poll(owner_id=user_id, deposit=deposit, state=None)
+            await bot.send_message(chat_id=user_id, text=f'Ваша оплата чека {check} была подтверждена!\n'
+                                                         'Сейчас анкета уйдёт на модерацию, \n'
+                                                         'вы всегда можете посмотреть статус заявки в Профиле /profile')
+        if 'cancel' == action:
+            try:
+                PollDB.polls_filter_remove('poll_id', poll_id)
+                await bot.send_message(chat_id=user_id, text=f'Ваша оплата чека {check} была отклонена!\n'
+                                                             'Заполните анкету заново, т.к. она аннулированна!\n'
+                                                             '/find_employs')
+            except:
+                pass
+        await callback.message.delete()
+        CheckDB.remove_check(check)
     # ============= MODERATOR POLL APPROVAL ============= #
     if 'poll:approval' in callback.data:
         poll_id = sdata[3]
+        action = sdata[2]
         # Process Accept Button
-        if sdata[2] == 'accept':
+        if action == 'accept':
             await publish_poll(poll_id)
             await callback.message.delete()
 
         # Process Reject Button
-        if sdata[2] == 'reject':
+        if action == 'reject':
             await RejectState.Reason.set()
             await dp.get_current().current_state().update_data(poll_id=poll_id)
             await dp.get_current().current_state().update_data(mod_username='@' + callback.from_user.username)

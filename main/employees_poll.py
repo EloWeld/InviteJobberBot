@@ -37,7 +37,7 @@ async def cmd_poll_start(message: Message):
         await state.update_data(poll_msgs=[[EmployeesPoll.Color, msg]])
 
 
-async def save_msg(msg: Message, state: State(), replymsg : Message = None):
+async def save_msg(msg: Message, state: State(), replymsg: Message = None):
     data = (await dp.get_current().current_state().get_data())["poll_msgs"]
     await dp.get_current().current_state().update_data(poll_msgs=data + [[state, msg]])
     if replymsg:
@@ -72,8 +72,8 @@ async def btn_back(message: Message, state: State(), l_state: State()):
     for tp in range(len(data)):
         if data[tp][0].state == l_state.state:
             msg = await bot.send_message(chat_id=message.from_user.id,
-                                   text=data[tp][1].text,
-                                   reply_markup=data[tp][1].reply_markup)
+                                         text=data[tp][1].text,
+                                         reply_markup=data[tp][1].reply_markup)
             break
     await dp.get_current().current_state().update_data(poll_msgs=(new_data + [[l_state, msg]]) if msg else new_data)
     await l_state.set()
@@ -110,7 +110,6 @@ async def cmd_poll_diff(message: Message, state: FSMContext):
     if message.text == BUTTONS['btn_back']:
         await btn_back(message, EmployeesPoll.Difficulty, EmployeesPoll.Color)
         return
-
 
     if await validators.validate_poll_difficulty(message.text):
         msg = await message.answer(MESSAGES['poll_wages_lbl'], reply_markup=nav.back_cancel_menu)
