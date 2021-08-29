@@ -1,1 +1,1 @@
-# InviteJobberBot
+# HabrParser_Bot
