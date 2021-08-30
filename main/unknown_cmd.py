@@ -1,6 +1,9 @@
+from aiogram.types import Message
 
-from main import *
-from src.data.config import *
+import nav
+from filters import IsPrivate
+from loader import dp
+from src.data.config import MESSAGES
 
 
 @dp.message_handler(IsPrivate())

@@ -4,7 +4,7 @@ from .reply_markups import *
 from .tabs import *
 
 
-def get_user_menu(user_id):
+def get_user_menu(user_id: int):
     user_lvl = UsersDB.get_0user_data(user_id, 'privilege')
     if user_lvl == 'admin':
         return admin_menu

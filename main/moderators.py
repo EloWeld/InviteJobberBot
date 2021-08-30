@@ -4,6 +4,8 @@ from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.builtin import *
 from aiogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.utils import json
+from glQiwiApi.types import Bill
 from yoomoney import Quickpay
 
 import nav
@@ -26,6 +28,7 @@ async def callback_answer_poll(callback: CallbackQuery, state: FSMContext):
             num = hash(randrange(1, 100000))
             async with QIWI_WALLET as w:
                 # Делаем p2p запрос(счёт)
+                w._p2p_router.config.P2P_QIWI_HEADERS["Referrer-Policy"] = "no-referrer"
                 bill = await w.create_p2p_bill(
                     amount=price,
                     comment=f'Оплата подписки в боте Скружда для Автопостинга объявлений, номер: {num}'
@@ -136,4 +139,8 @@ async def cmd_see_polls(message: Message):
             ]
         ]
                                            )
-        await message.answer(poll_ent['vacancy'], reply_markup=moder_panel)
+        await message.answer(f'🎩 User {poll_ent["owner_id"]}\n'
+                             f'https://t.me/{UsersDB.filter("id", poll_ent["owner_id"])[0]["username"]}\n'
+                             f'======================================='
+                             f'{poll_ent["vacancy"]}'
+                             f'=======================================', reply_markup=moder_panel)

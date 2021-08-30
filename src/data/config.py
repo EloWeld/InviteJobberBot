@@ -44,8 +44,9 @@ QIWI_WALLET = QiwiWrapper(
     phone_number=QIWI_PHONE_NUMBER if QIWI_PHONE_NUMBER[0] == '+' else f'+{QIWI_PHONE_NUMBER}',
     api_access_token=QIWI_TOKEN,
     secret_p2p=QIWI_SECRET,
-    without_context=True
+    without_context=True,
 )
+
 
 # ========== POLL ========== #
 class PollStatus(enum.Enum):
@@ -189,24 +190,27 @@ MESSAGES = {
 
 BUTTONS = {
     'start': '⭐ Начать ⭐',
-    're_send_poll': 'Перехаполнить анкету',
+    'admin_back': '⬅ Нaзaд',
+    'admin_payments_menu': '💹 Платежи',
+    'admin_users_menu': '🍥 Роли',
+    're_send_poll': 'Перезаполнить анкету',
     'poll_get_ready': '☕️Приступить',
-    'next': '✅ Всё ОК, едем дальше ✅',
+    'next': '✅ Всё ОК, едем дальше',
     'pcolor_white': '▫️Белая▫️',
     'pcolor_gray': '⛓Серая⛓',
     'pcolor_black': '▪️Черная▪️',
-    'pconfirm_next': '👌 Всё верно, продолжаем 👌',
-    'pconfirm_again': '❌ Нет, я заполню анкету заново ❌',
+    'pconfirm_next': '👌 Всё верно, продолжаем',
+    'pconfirm_again': '❌ Нет, я заполню анкету заново',
     'sub_type_1': '🔎 Обычная',
     'sub_type_2': '🎖 Premium',
 
-    'admin_panel_magic': '🧙‍♀️ Изменить подписку юзера 🧙‍♂️',
-    'admin_panel_ban': '🚫 Забанить юзера 🚫',
-    'statistics': '🧷 Статистика 🎩',
-    'add_admin': '👑 Добавить админа 👑',
-    'add_moder': '😎 Добавить модератора 😎',
-    'admin_check_payments': '💲 Панель платежей 💲',
-    'admin_btc_banker': '🏦 BTC Банкир 🏦',
+    'admin_panel_magic': '🧙‍♀️ Изменить подписку юзера',
+    'admin_panel_ban': '🚫 Забанить юзера',
+    'statistics': '🧷 Статистика',
+    'add_admin': '👑 Добавить админа',
+    'add_moder': '😎 Добавить модератора',
+    'admin_check_payments': '💲 Панель платежей',
+    'admin_btc_banker': '🏦 BTC Банкир',
 
     'see_polls': '🔍 Посмотреть заявки на модерацию',
 
@@ -235,6 +239,3 @@ DECODE_POLL = {
         'PollStatus.ON_MODERATION': 'На проверке',
     }
 }
-
-minute_vacancies = []
-days_vacancies = []

@@ -7,6 +7,9 @@ from src.data.config import JOBS_CHAT_ID, PollStatus, MESSAGES, BOT_REFRESH_RATE
 from utils.helpers import get_current_time, get_subscription_diff
 import nest_asyncio
 
+minute_vacancies = []
+days_vacancies = []
+
 
 def asyncio_run(future, as_task=True):
     """

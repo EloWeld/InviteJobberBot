@@ -107,7 +107,7 @@ async def cmd_profile_back(message: Message):
     await message.answer(
         '''
             Вы в главном меню
-        ''', reply_markup=get_user_menu(message))
+        ''', reply_markup=get_user_menu(message.from_user.id))
 
 
 @dp.message_handler(Text(BUTTONS['profile_my_poll']))

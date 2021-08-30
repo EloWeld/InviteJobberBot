@@ -34,21 +34,37 @@ find_employees_menu = ReplyKeyboardMarkup(resize_keyboard=True, keyboard=[
 admin_menu = ReplyKeyboardMarkup(resize_keyboard=True, keyboard=[
     [
         KeyboardButton(text=BUTTONS["statistics"]),
-    ],
-    [
-        KeyboardButton(text=BUTTONS["admin_panel_magic"]),
         KeyboardButton(text=BUTTONS["see_polls"]),
-        KeyboardButton(text=BUTTONS["admin_btc_banker"]),
     ],
     [
-        KeyboardButton(text=BUTTONS["admin_panel_ban"]),
-        KeyboardButton(text=BUTTONS["add_admin"]),
-        KeyboardButton(text=BUTTONS["add_moder"]),
-        KeyboardButton(text=BUTTONS["admin_check_payments"])
+        KeyboardButton(text=BUTTONS["admin_payments_menu"]),
+        KeyboardButton(text=BUTTONS["admin_users_menu"]),
     ],
     find_employees_menu.keyboard[0]
 ]
                                  )
+admin_payments_menu = ReplyKeyboardMarkup(resize_keyboard=True, keyboard=[
+    [
+        KeyboardButton(text=BUTTONS["admin_btc_banker"]),
+        KeyboardButton(text=BUTTONS["admin_check_payments"])
+    ],
+    [
+        KeyboardButton(text=BUTTONS['admin_back']),
+    ]
+]
+)
+admin_users_menu = ReplyKeyboardMarkup(resize_keyboard=True, keyboard=[
+    [
+        KeyboardButton(text=BUTTONS["add_admin"]),
+        KeyboardButton(text=BUTTONS["add_moder"]),
+        KeyboardButton(text=BUTTONS["admin_panel_magic"]),
+        KeyboardButton(text=BUTTONS["admin_panel_ban"]),
+    ],
+    [
+        KeyboardButton(text=BUTTONS['admin_back']),
+    ]
+]
+)
 
 # ==== Moderator menu ==== #
 moder_menu = ReplyKeyboardMarkup(resize_keyboard=True, keyboard=[

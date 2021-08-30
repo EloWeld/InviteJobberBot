@@ -55,7 +55,7 @@ async def callback_answer(callback: CallbackQuery, state: FSMContext):
                                                   'Подписка оплачена! Теперь она будет отправлена на модерацию ♥\n'
                                                   'Не волнуйтесь, модерация занимает всего пару часов, даже в случае отклнения '
                                                   'заявки средства вернуться на карту!\n❤🧡💛💚💙💜🤎🖤🤍',
-                                                  reply_markup=get_user_menu(callback.message))
+                                                  reply_markup=get_user_menu(callback.from_user.id))
                     await finish_poll(callback.from_user.id, state=state, deposit=price)
                     await callback.message.delete()
                     await state.finish()

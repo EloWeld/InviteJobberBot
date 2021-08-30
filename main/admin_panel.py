@@ -27,6 +27,20 @@ async def cmd_admin_stats(message: Message):
 
 
 # =============== Banker Menu ============= #
+@dp.message_handler(IsAdmin(), Text(BUTTONS["admin_back"]))
+async def admin_payments_menu(message: Message):
+    await message.answer('🀄 Админка', reply_markup=nav.get_user_menu(message.from_user.id))
+
+@dp.message_handler(IsAdmin(), Text(BUTTONS["admin_payments_menu"]))
+async def admin_payments_menu(message: Message):
+    await message.answer('💹 Меню платежей', reply_markup=nav.admin_payments_menu)
+
+
+@dp.message_handler(IsAdmin(), Text(BUTTONS["admin_users_menu"]))
+async def admin_users_menu(message: Message):
+    await message.answer('💹 Меню управления пользователями', reply_markup=nav.admin_users_menu)
+
+
 @dp.message_handler(IsAdmin(), Text(BUTTONS["admin_btc_banker"]))
 @dp.message_handler(IsAdmin(), Command('/banker'))
 async def cmd_btc_banker(message: Message):
